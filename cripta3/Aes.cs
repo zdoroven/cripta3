@@ -10,6 +10,7 @@ namespace cripta3
     {
         public void example()
         {
+
             string original = "Here is some data to encrypt!";
 
             using (Aes myAes = Aes.Create())
