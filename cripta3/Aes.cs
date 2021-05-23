@@ -8,20 +8,27 @@ namespace cripta3
 {
     class AES
     {
+        byte[] myAesKey;
+        byte[] myAesIV;
+
+        public void generateKey()
+        {
+            Aes myAes = Aes.Create();
+            myAesKey = myAes.Key;
+            myAesIV = myAes.IV;
+        }
+
         public void example()
         {
 
             string original = "Here is some data to encrypt!";
 
-            using (Aes myAes = Aes.Create())
-            {
-                // Encrypt the string to an array of bytes.
-                byte[] encrypted = EncryptStringToBytes_Aes(original, myAes.Key, myAes.IV);
-                // Decrypt the bytes to a string.
-                string roundtrip = DecryptStringFromBytes_Aes(encrypted, myAes.Key, myAes.IV);
-                Console.WriteLine("Original:   {0}", original);
-                Console.WriteLine("Round Trip: {0}", roundtrip);
-            }
+            // Encrypt the string to an array of bytes.
+            byte[] encrypted = EncryptStringToBytes_Aes(original, myAesKey, myAesIV);
+            // Decrypt the bytes to a string.
+            string roundtrip = DecryptStringFromBytes_Aes(encrypted, myAesKey, myAesIV);
+            Console.WriteLine("Original:   {0}", original);
+            Console.WriteLine("Round Trip: {0}", roundtrip);
         }
 
         static byte[] EncryptStringToBytes_Aes(string plainText, byte[] Key, byte[] IV)
