@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Security.Cryptography;
 
 namespace cripta3
 {
-    class Keys
+    public static class Keys
     {
         private const string RSA_CLOSE = "rsa-close";
         private const string RSA_OPEN = "rsa-open";
@@ -14,25 +15,40 @@ namespace cripta3
 
         private const string KEYS_FILE = "keys.txt";
 
-        public void write(string rsaClose, string rsaOpen, string aesKey, string aesIV)
+        public static void Write(RSAParameters rsaClose, RSAParameters rsaOpen, byte[] aesKey, byte[] aesIV)
         {
-            using (StreamWriter sw = new StreamWriter("keys.txt"))
+            using (FileStream fileStream = new FileStream(KEYS_FILE, FileMode.OpenOrCreate))
             {
-                var stringBuilder = new StringBuilder();
-                stringBuilder.Append(String.Format("{0}: ", RSA_CLOSE));
-                stringBuilder.Append(rsaClose);
-                stringBuilder.Append(String.Format("\n{0}: ", RSA_OPEN));
-                stringBuilder.Append(rsaOpen);
-                stringBuilder.Append(String.Format("\n{0}: ", AES_KEY));
-                stringBuilder.Append(aesKey);
-                stringBuilder.Append(String.Format("\n{0}: ", AES_IV));
-                stringBuilder.Append(aesIV);
+                // Write the data to the file, byte by byte.
+                for (int i = 0; i < dataArray.Length; i++)
+                {
+                    fileStream.WriteByte(dataArray[i]);
+                }
 
-                sw.WriteLine(stringBuilder.ToString());   
+                for (int i = 0; i < dataArray.Length; i++)
+                {
+                    fileStream.WriteByte(dataArray[i]);
+                }
+
+
+                // Set the stream position to the beginning of the file.
+                // fileStream.Seek(0, SeekOrigin.Begin);
+
+                // Read and verify the data.
+                /*for (int i = 0; i < fileStream.Length; i++)
+                {
+                    if (dataArray[i] != fileStream.ReadByte())
+                    {
+                        Console.WriteLine("Error writing data.");
+                        return;
+                    }
+                }
+                Console.WriteLine("The data was written to {0} " +
+                    "and verified.", fileStream.Name);*/
             }
         }
 
-        public string[] read()
+        public static string[] Read()
         {
             string[] result = new string[4];
             string line = "";

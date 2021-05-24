@@ -5,21 +5,21 @@ using System.Text;
 
 namespace cripta3
 {
-    class RSA
+    public class RSA
     {
-        RSAParameters privateKey;
-        RSAParameters publicKey;
+        public RSAParameters PrivateKey { get; private set; }
+        public RSAParameters PublicKey { get; private set; }
 
 
         public void GenerateKeys()
         {
             RSACryptoServiceProvider RSA = new RSACryptoServiceProvider();
 
-            privateKey = RSA.ExportParameters(true);
-            publicKey = RSA.ExportParameters(false);
+            PrivateKey = RSA.ExportParameters(true);
+            PublicKey = RSA.ExportParameters(false);
         }
 
-        static public byte[] RSAEncrypt(byte[] DataToEncrypt, RSAParameters RSAKeyInfo, bool DoOAEPPadding)
+        public static byte[] RSAEncrypt(byte[] DataToEncrypt, RSAParameters RSAKeyInfo, bool DoOAEPPadding)
         {
             RSACryptoServiceProvider RSA = new RSACryptoServiceProvider();
             RSA.ImportParameters(RSAKeyInfo);
@@ -27,7 +27,7 @@ namespace cripta3
             return RSA.Encrypt(DataToEncrypt, DoOAEPPadding);
         }
 
-        static public byte[] RSADecrypt(byte[] DataToDecrypt, RSAParameters RSAKeyInfo, bool DoOAEPPadding)
+        public static byte[] RSADecrypt(byte[] DataToDecrypt, RSAParameters RSAKeyInfo, bool DoOAEPPadding)
         {
             RSACryptoServiceProvider RSA = new RSACryptoServiceProvider();
             RSA.ImportParameters(RSAKeyInfo);
@@ -35,20 +35,20 @@ namespace cripta3
             return RSA.Decrypt(DataToDecrypt, DoOAEPPadding);
         }
 
-        public void Exapmple()
+        public void Example()
         {
             UnicodeEncoding byteConverter = new UnicodeEncoding();
             string toEncrypt = "Hello, world";
             
             // зашифровка текстa
-            byte[] encBytes = RSAEncrypt(byteConverter.GetBytes(toEncrypt), publicKey, false);
+            byte[] encBytes = RSAEncrypt(byteConverter.GetBytes(toEncrypt), PublicKey, false);
 
             string encrypt = byteConverter.GetString(encBytes);
             Console.WriteLine("Encrypt str: " + encrypt);
             Console.WriteLine("Encrypt bytes: " + string.Join(", ", encBytes));
 
             // расшифровка текста
-            byte[] decBytes = RSADecrypt(encBytes, privateKey, false);
+            byte[] decBytes = RSADecrypt(encBytes, PrivateKey, false);
 
             Console.WriteLine("Decrypt str: " + byteConverter.GetString(decBytes));
             Console.WriteLine("Decrypt bytes: " + string.Join(", ", byteConverter.GetBytes(encrypt)));

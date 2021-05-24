@@ -1,0 +1,4 @@
+﻿Hello, World!
+Some text for encryption
+Bye!
+~

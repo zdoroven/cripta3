@@ -6,16 +6,19 @@ using System.Security.Cryptography;
 
 namespace cripta3
 {
-    class AES
+    public class AES
     {
-        byte[] myAesKey;
-        byte[] myAesIV;
+        public byte[] AesKey { get; private set; }
+        public byte[] AesIV { get; private set; }
+
+
 
         public void GenerateKeys()
         {
             Aes myAes = Aes.Create();
-            myAesKey = myAes.Key;
-            myAesIV = myAes.IV;
+
+            AesKey = myAes.Key;
+            AesIV = myAes.IV;
         }
 
         public void Example()
@@ -24,16 +27,16 @@ namespace cripta3
             string original = "Here is some data to encrypt!";
 
             // Encrypt the string to an array of bytes.
-            byte[] encrypted = EncryptStringToBytes_Aes(original, myAesKey, myAesIV);
+            byte[] encrypted = EncryptStringToBytes_Aes(original, AesKey, AesIV);
 
             // Decrypt the bytes to a string.
-            string roundtrip = DecryptStringFromBytes_Aes(encrypted, myAesKey, myAesIV);
+            string roundtrip = DecryptStringFromBytes_Aes(encrypted, AesKey, AesIV);
             Console.WriteLine("Original:   {0}", original);
             Console.WriteLine("Encrypted:   {0}", encrypted);
             Console.WriteLine("Round Trip: {0}", roundtrip);
         }
 
-        static byte[] EncryptStringToBytes_Aes(string plainText, byte[] Key, byte[] IV)
+        public byte[] EncryptStringToBytes_Aes(string plainText, byte[] Key, byte[] IV)
         {
             // Check arguments.
             if (plainText == null || plainText.Length <= 0)
@@ -73,7 +76,7 @@ namespace cripta3
             return encrypted;
         }
 
-        static string DecryptStringFromBytes_Aes(byte[] cipherText, byte[] Key, byte[] IV)
+        public string DecryptStringFromBytes_Aes(byte[] cipherText, byte[] Key, byte[] IV)
         {
             // Check arguments.
             if (cipherText == null || cipherText.Length <= 0)
