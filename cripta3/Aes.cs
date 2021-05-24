@@ -11,23 +11,25 @@ namespace cripta3
         byte[] myAesKey;
         byte[] myAesIV;
 
-        public void generateKey()
+        public void GenerateKeys()
         {
             Aes myAes = Aes.Create();
             myAesKey = myAes.Key;
             myAesIV = myAes.IV;
         }
 
-        public void example()
+        public void Example()
         {
 
             string original = "Here is some data to encrypt!";
 
             // Encrypt the string to an array of bytes.
             byte[] encrypted = EncryptStringToBytes_Aes(original, myAesKey, myAesIV);
+
             // Decrypt the bytes to a string.
             string roundtrip = DecryptStringFromBytes_Aes(encrypted, myAesKey, myAesIV);
             Console.WriteLine("Original:   {0}", original);
+            Console.WriteLine("Encrypted:   {0}", encrypted);
             Console.WriteLine("Round Trip: {0}", roundtrip);
         }
 
@@ -102,7 +104,6 @@ namespace cripta3
                     {
                         using (StreamReader srDecrypt = new StreamReader(csDecrypt))
                         {
-
                             // Read the decrypted bytes from the decrypting stream
                             // and place them in a string.
                             plaintext = srDecrypt.ReadToEnd();

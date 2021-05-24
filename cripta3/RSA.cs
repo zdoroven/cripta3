@@ -11,7 +11,7 @@ namespace cripta3
         RSAParameters publicKey;
 
 
-        public void generateKeys()
+        public void GenerateKeys()
         {
             RSACryptoServiceProvider RSA = new RSACryptoServiceProvider();
 
@@ -23,6 +23,7 @@ namespace cripta3
         {
             RSACryptoServiceProvider RSA = new RSACryptoServiceProvider();
             RSA.ImportParameters(RSAKeyInfo);
+
             return RSA.Encrypt(DataToEncrypt, DoOAEPPadding);
         }
 
@@ -30,17 +31,16 @@ namespace cripta3
         {
             RSACryptoServiceProvider RSA = new RSACryptoServiceProvider();
             RSA.ImportParameters(RSAKeyInfo);
+
             return RSA.Decrypt(DataToDecrypt, DoOAEPPadding);
         }
 
-        public void exapmple()
+        public void Exapmple()
         {
-            // генерация ключей rsa
-            generateKeys(); 
-
             UnicodeEncoding byteConverter = new UnicodeEncoding();
             string toEncrypt = "Hello, world";
-            // зашифровка тексте
+            
+            // зашифровка текстa
             byte[] encBytes = RSAEncrypt(byteConverter.GetBytes(toEncrypt), publicKey, false);
 
             string encrypt = byteConverter.GetString(encBytes);
@@ -52,8 +52,6 @@ namespace cripta3
 
             Console.WriteLine("Decrypt str: " + byteConverter.GetString(decBytes));
             Console.WriteLine("Decrypt bytes: " + string.Join(", ", byteConverter.GetBytes(encrypt)));
-
-            Console.ReadKey();
         }
 
     }

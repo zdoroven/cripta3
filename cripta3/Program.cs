@@ -6,7 +6,16 @@ namespace cripta3
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            var aes = new AES();
+            aes.GenerateKeys();
+            aes.Example();
+
+            Console.WriteLine();
+
+            var rsa = new RSA();
+            rsa.GenerateKeys();
+            rsa.Exapmple();
+
         }
     }
 }
