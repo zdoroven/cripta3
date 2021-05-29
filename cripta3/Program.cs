@@ -14,68 +14,67 @@ namespace cripta3
 
         static void Main(string[] args)
         {
+            
+        }
+
+        private void temp()
+        {
             /* Читаем текст для последующего шифрования */
             var text = FileReadWriter.ReadString(DOC_FILE);
+
             /* Используем AES для шифрования текста */
-            // Пееменные для ключей
+            // Пеpеменные для ключей
             var aesKey = Array.Empty<Byte>();
             var aesIV = Array.Empty<Byte>();
-            RSAParameters rsaOpen;
-            RSAParameters rsaClose;
+
+            RSAParameters rsaKey;
 
             var aes = new AES();
             var rsa = new RSA();
 
             // Читаем старые ключи, если есть
-            var keys = Keys.Read();
-            if(keys[0] == "")
+            var keys = Keys.ReadKeys();
+
+            if (keys.Item2[0].Length == 0 || keys.Item2[1].Length == 0)
             {
-                // Нет сохраненных ключей, надо генерить новые
+                // Нет сохраненных ключей, надо генерировать новые
                 aes.GenerateKeys();
                 aesKey = aes.AesKey;
                 aesIV = aes.AesIV;
-                rsa.GenerateKeys();
-                rsaOpen = rsa.PublicKey;
-                rsaClose = rsa.PrivateKey;
+
+                rsa.GenerateKey();
+                rsaKey = rsa.Key;
             }
             else
             {
-                
-                aesKey = Encoding.ASCII.GetBytes(keys[2]);
-                aesIV = Encoding.ASCII.GetBytes(keys[3]);
+                rsaKey = keys.Item1;
+                aesKey = keys.Item2[0];
+                aesIV = keys.Item2[1];
             }
-            
-            
+
+            /* Шифруем текст с помощью AES */
             var encryptedBytes = aes.EncryptStringToBytes_Aes(text, aesKey, aesIV);
             Console.WriteLine("Изначальный текст: " + text + "\n");
+
             /* Пишем в файл зашифрованный текст */
-            //FileReadWriter.WriteString(ByteArrayToString(encryptedBytes), ENC_DOC_FILE);
-            Console.WriteLine("Зашифрованный текст: " + ByteArrayToString(encryptedBytes) + "\n");
-;            /* Шифруем саенсовые ключи AES с помощью RSA */
+            FileReadWriter.WriteBytes(encryptedBytes, ENC_DOC_FILE);
+            /*Console.WriteLine("Зашифрованный текст: " + ByteArrayToString(encryptedBytes) + "\n");*/
 
-            var encAesKey = RSA.RSAEncrypt(aesKey, rsa.PublicKey, false);
-            var encAesKeyIV = RSA.RSAEncrypt(aesIV, rsa.PublicKey, false);
+            /* Шифруем саенсовые ключи AES с помощью RSA
+*/          var encAesKey = RSA.RSAEncrypt(aesKey, rsa.Key, false);
+            var encAesKeyIV = RSA.RSAEncrypt(aesIV, rsa.Key, false);
 
-            /* Записываем шифрованные сеансовые ключи AES и ключи RSA в файл */
-            //Keys.Write(rsa.PrivateKey);
+            /* Записываем шифрованные сеансовые ключи AES и ключи шифрования RSA  */
+            Keys.WriteKeys(rsa.RSAProvider, encAesKey, encAesKeyIV);
 
             // Расшифровываем ключи симметричного алгоритма
-            var AesKey = RSA.RSADecrypt(encAesKey, rsa.PrivateKey, false);
-            var AesIV = RSA.RSADecrypt(encAesKeyIV, rsa.PrivateKey, false);
+            var AesKey = RSA.RSADecrypt(encAesKey, rsa.Key, false);
+            var AesIV = RSA.RSADecrypt(encAesKeyIV, rsa.Key, false);
+
             // Расшифровываем текст
             var decryptedText = aes.DecryptStringFromBytes_Aes(encryptedBytes, AesKey, AesIV);
-            //FileReadWriter.WriteString(decryptedText, DEC_DOC_FILE);
+            FileReadWriter.WriteString(decryptedText, DEC_DOC_FILE);
             Console.Write("Расшифрованный текст: " + decryptedText + "\n");
-        }
-
-        private static string ByteArrayToString(byte[] bytes)
-        {
-            var stringBuilder = new StringBuilder();
-
-            foreach (var item in bytes)
-                stringBuilder.Append(item.ToString());
-
-            return stringBuilder.ToString();
         }
     }
 }

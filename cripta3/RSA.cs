@@ -7,16 +7,14 @@ namespace cripta3
 {
     public class RSA
     {
-        public RSAParameters PrivateKey { get; private set; }
-        public RSAParameters PublicKey { get; private set; }
+        public RSAParameters Key { get; private set; }
+        public RSACryptoServiceProvider RSAProvider = null;
 
-
-        public void GenerateKeys()
+        public void GenerateKey()
         {
-            RSACryptoServiceProvider RSA = new RSACryptoServiceProvider();
+            RSAProvider = new RSACryptoServiceProvider();
 
-            PrivateKey = RSA.ExportParameters(true);
-            PublicKey = RSA.ExportParameters(false);
+            Key = RSAProvider.ExportParameters(true);
         }
 
         public static byte[] RSAEncrypt(byte[] DataToEncrypt, RSAParameters RSAKeyInfo, bool DoOAEPPadding)
@@ -37,7 +35,7 @@ namespace cripta3
 
         public void Example()
         {
-            UnicodeEncoding byteConverter = new UnicodeEncoding();
+            /*UnicodeEncoding byteConverter = new UnicodeEncoding();
             string toEncrypt = "Hello, world";
             
             // зашифровка текстa
@@ -51,7 +49,7 @@ namespace cripta3
             byte[] decBytes = RSADecrypt(encBytes, PrivateKey, false);
 
             Console.WriteLine("Decrypt str: " + byteConverter.GetString(decBytes));
-            Console.WriteLine("Decrypt bytes: " + string.Join(", ", byteConverter.GetBytes(encrypt)));
+            Console.WriteLine("Decrypt bytes: " + string.Join(", ", byteConverter.GetBytes(encrypt)));*/
         }
 
     }
