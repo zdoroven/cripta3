@@ -7,13 +7,20 @@ namespace cripta3
 {
     public class RSA
     {
-        public RSAParameters Key { get; private set; }
+        public RSAParameters Key { get; set; }
         public RSACryptoServiceProvider RSAProvider = null;
 
         public void GenerateKey()
         {
             RSAProvider = new RSACryptoServiceProvider();
 
+            Key = RSAProvider.ExportParameters(true);
+        }
+
+        public void setKeys(RSAParameters keys)
+        {
+            RSAProvider = new RSACryptoServiceProvider();
+            RSAProvider.ImportParameters(keys);
             Key = RSAProvider.ExportParameters(true);
         }
 
