@@ -24,7 +24,12 @@ namespace cripta3
                     encrypt();
                 } else if(i == 2)
                 {
-                    decrypt();
+                    try
+                    {
+                        decrypt();
+                    } catch {
+                        Console.WriteLine("Не получается расшифровать текст");
+                    }
                 } else if(i == 3)
                 {
                     refreshKeys();
